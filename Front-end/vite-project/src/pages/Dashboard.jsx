@@ -8,6 +8,8 @@ import {
 import SummaryCard from '../components/dashboard/SummaryCard';
 import DashboardFilters, { getPresetRange } from '../components/dashboard/DashboardFilters';
 import ExpensesOverTime from '../components/dashboard/ExpensesOverTime';
+import SpendingByCategory from '../components/dashboard/SpendingByCategory';
+import RecentTransactions from '../components/dashboard/RecentTransactions';
 import { transactions } from '../data/mockData';
 
 // ── Currency formatter ─────────────────────────────────────────────────────
@@ -154,6 +156,16 @@ const Dashboard = () => {
       {/* ── Expenses Over Time Chart ── */}
       <div style={{ marginTop: '2rem' }}>
         <ExpensesOverTime transactions={filteredTransactions} />
+      </div>
+
+      {/* ── Spending by Category Chart ── */}
+      <div style={{ marginTop: '2rem' }}>
+        <SpendingByCategory transactions={filteredTransactions} />
+      </div>
+
+      {/* ── Recent Transactions ── */}
+      <div style={{ marginTop: '2rem' }}>
+        <RecentTransactions transactions={filteredTransactions} />
       </div>
 
     </div>
