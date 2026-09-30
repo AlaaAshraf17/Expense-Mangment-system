@@ -9,6 +9,7 @@ import SummaryCard from '../components/dashboard/SummaryCard';
 import DashboardFilters, { getPresetRange } from '../components/dashboard/DashboardFilters';
 import ExpensesOverTime from '../components/dashboard/ExpensesOverTime';
 import SpendingByCategory from '../components/dashboard/SpendingByCategory';
+import IncomeVsExpenses from '../components/dashboard/IncomeVsExpenses';
 import RecentTransactions from '../components/dashboard/RecentTransactions';
 import { transactions } from '../data/mockData';
 
@@ -158,9 +159,10 @@ const Dashboard = () => {
         <ExpensesOverTime transactions={filteredTransactions} />
       </div>
 
-      {/* ── Spending by Category Chart ── */}
-      <div style={{ marginTop: '2rem' }}>
+      {/* ── Two-column grid: Spending by Category + Income vs Expenses ── */}
+      <div className="grid gap-5 lg:grid-cols-2" style={{ marginTop: '2rem' }}>
         <SpendingByCategory transactions={filteredTransactions} />
+        <IncomeVsExpenses transactions={filteredTransactions} />
       </div>
 
       {/* ── Recent Transactions ── */}

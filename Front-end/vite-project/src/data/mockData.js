@@ -168,4 +168,22 @@ export const transactions = [
   { id: 'txn-120', type: 'expense', title: 'Water Bill',                amount: 36.50,   category: 'Bills & Utilities', paymentMethod: 'Bank Transfer',    date: '2026-04-25' },
   { id: 'txn-121', type: 'expense', title: 'Bakery & Café',             amount: 18.30,   category: 'Food & Dining',   paymentMethod: 'Apple Pay',          date: '2026-04-27' },
   { id: 'txn-122', type: 'income',  title: 'Etsy Shop Sales',           amount: 195.00,  category: 'Side Business',   paymentMethod: 'PayPal',             date: '2026-04-29' },
+
+  // ──────── October 2026 ────────
+  { id: 'txn-123', type: 'income',  title: 'Monthly Salary',            amount: 5200.00, category: 'Salary',          paymentMethod: 'Bank Transfer',      date: '2026-10-01' },
+  { id: 'txn-124', type: 'expense', title: 'Apartment Rent',            amount: 1400.00, category: 'Rent',            paymentMethod: 'Bank Transfer',      date: '2026-10-01' },
+  { id: 'txn-125', type: 'expense', title: 'Electricity Bill',          amount: 92.80,   category: 'Bills & Utilities', paymentMethod: 'Visa •••• 4821',   date: '2026-10-02' },
+  { id: 'txn-126', type: 'expense', title: 'Target Groceries',          amount: 128.45,  category: 'Groceries',       paymentMethod: 'Apple Pay',          date: '2026-10-03' },
+  { id: 'txn-127', type: 'expense', title: 'Netflix Subscription',      amount: 15.99,   category: 'Subscriptions',   paymentMethod: 'Visa •••• 4821',    date: '2026-10-05' },
+  { id: 'txn-128', type: 'expense', title: 'Spotify Premium',           amount: 9.99,    category: 'Subscriptions',   paymentMethod: 'Visa •••• 4821',    date: '2026-10-05' },
+  { id: 'txn-129', type: 'income',  title: 'Freelance UI Design',       amount: 950.00,  category: 'Freelance',       paymentMethod: 'PayPal',             date: '2026-10-06' },
+  { id: 'txn-130', type: 'expense', title: 'Thai Restaurant',           amount: 48.70,   category: 'Food & Dining',   paymentMethod: 'Mastercard •••• 7392', date: '2026-10-07' },
+  { id: 'txn-131', type: 'expense', title: 'Gym Membership',            amount: 49.99,   category: 'Personal Care',   paymentMethod: 'Bank Transfer',      date: '2026-10-08' },
+  { id: 'txn-132', type: 'expense', title: 'Gas Station Fill-up',       amount: 54.30,   category: 'Transportation',  paymentMethod: 'Cash',               date: '2026-10-09' },
+  { id: 'txn-133', type: 'expense', title: 'Whole Foods Groceries',     amount: 145.60,  category: 'Groceries',       paymentMethod: 'Apple Pay',          date: '2026-10-10' },
+  { id: 'txn-134', type: 'expense', title: 'Movie Tickets',             amount: 32.00,   category: 'Entertainment',   paymentMethod: 'Cash',               date: '2026-10-11' },
+  { id: 'txn-135', type: 'expense', title: 'Internet Bill',             amount: 65.00,   category: 'Bills & Utilities', paymentMethod: 'Bank Transfer',    date: '2026-10-13' },
+  { id: 'txn-136', type: 'income',  title: 'Stock Dividend',            amount: 135.00,  category: 'Investments',     paymentMethod: 'Bank Transfer',      date: '2026-10-14' },
+  { id: 'txn-137', type: 'expense', title: 'Amazon – Office Supplies',  amount: 87.50,   category: 'Shopping',        paymentMethod: 'Visa •••• 4821',    date: '2026-10-15' },
+  { id: 'txn-138', type: 'expense', title: 'Pharmacy – Prescriptions',  amount: 42.75,   category: 'Healthcare',      paymentMethod: 'Mastercard •••• 7392', date: '2026-10-16' },
 ];
