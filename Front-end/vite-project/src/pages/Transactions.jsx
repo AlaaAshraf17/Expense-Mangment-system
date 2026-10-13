@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
 import { HiOutlineArrowDownLeft, HiOutlineArrowUpRight, HiOutlineArrowsRightLeft } from 'react-icons/hi2';
-import { transactions } from '../data/mockData';
+import { useTransactions } from '../context/TransactionContext';
 import TransactionFilters from '../components/transactions/TransactionFilters';
 import TransactionList from '../components/transactions/TransactionList';
+import AddTransactionModal from '../components/transactions/AddTransactionModal';
 
 const currency = new Intl.NumberFormat('en-US', {
   style: 'currency', currency: 'USD', maximumFractionDigits: 2,
@@ -20,6 +21,8 @@ const SummaryCard = ({ label, amount, icon: Icon, tone, detail }) => (
 );
 
 const Transactions = () => {
+  const { transactions, setTransactions } = useTransactions();
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     search: '', type: 'all', category: '', paymentMethod: '', datePreset: 'all', startDate: '', endDate: '',
   });
@@ -36,12 +39,17 @@ const Transactions = () => {
     if (filters.startDate) result = result.filter((t) => t.date >= filters.startDate);
     if (filters.endDate) result = result.filter((t) => t.date <= filters.endDate);
     return result.sort((a, b) => new Date(b.date) - new Date(a.date));
-  }, [filters]);
+  }, [filters, transactions]);
 
   const totals = useMemo(() => transactions.reduce((sum, transaction) => {
     sum[transaction.type] += Number(transaction.amount);
     return sum;
-  }, { income: 0, expense: 0 }), []);
+  }, { income: 0, expense: 0 }), [transactions]);
+
+  const addTransaction = (transaction) => {
+    setTransactions((previous) => [transaction, ...previous]);
+    setIsAddModalOpen(false);
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }} className="mx-auto w-full max-w-6xl py-6 lg:py-8">
@@ -51,8 +59,13 @@ const Transactions = () => {
           <h1 className="text-3xl font-bold tracking-tight text-slate-950">Transactions</h1>
           <p className="text-sm text-slate-500">A clear view of every payment, purchase, and deposit.</p>
         </div>
-        <div className="shrink-0 w-37 rounded-2xl border border-slate-200 bg-white px-7 py-5 mb-6 text-sm text-slate-500 shadow-sm">
-          <span className="font-semibold text-slate-900">{transactions.length}</span> total records
+        <div className="flex shrink-0 items-center gap-3 self-start sm:self-auto">
+          <button type="button" onClick={() => setIsAddModalOpen(true)} className="h-11 rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/20">
+            + Add Transaction
+          </button>
+          <div className="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm text-slate-500 shadow-sm">
+            <span className="font-semibold text-slate-900">{transactions.length}</span> total records
+          </div>
         </div>
       </header>
 
@@ -82,6 +95,7 @@ const Transactions = () => {
         </div>
         <TransactionList transactions={filteredTransactions} />
       </section>
+      {isAddModalOpen && <AddTransactionModal onClose={() => setIsAddModalOpen(false)} onSubmit={addTransaction} />}
     </div>
   );
 };

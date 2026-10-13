@@ -11,7 +11,7 @@ import ExpensesOverTime from '../components/dashboard/ExpensesOverTime';
 import SpendingByCategory from '../components/dashboard/SpendingByCategory';
 import IncomeVsExpenses from '../components/dashboard/IncomeVsExpenses';
 import RecentTransactions from '../components/dashboard/RecentTransactions';
-import { transactions } from '../data/mockData';
+import { useTransactions } from '../context/TransactionContext';
 
 // ── Currency formatter ─────────────────────────────────────────────────────
 const fmt = (n) =>
@@ -45,6 +45,7 @@ const buildDefaultFilters = () => {
 
 // ── Dashboard ──────────────────────────────────────────────────────────────
 const Dashboard = () => {
+  const { transactions } = useTransactions();
   const [filters, setFilters] = useState(buildDefaultFilters);
 
   // ── Derive filtered transactions from the selected filters ──────────────
@@ -60,7 +61,7 @@ const Dashboard = () => {
       if (filters.paymentMethod && t.paymentMethod !== filters.paymentMethod) return false;
       return true;
     });
-  }, [filters]);
+  }, [filters, transactions]);
 
   // ── Summary metrics from filteredTransactions ──────────────────────────
   const metrics = useMemo(() => {

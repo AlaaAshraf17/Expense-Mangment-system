@@ -1,9 +1,12 @@
 import AppRoutes from './routes/AppRoutes'
+import { TransactionProvider } from './context/TransactionContext'
 function App() {
 
   return (
     <>
-     <AppRoutes></AppRoutes>
+     <TransactionProvider>
+       <AppRoutes />
+     </TransactionProvider>
     </>
   )
 }
