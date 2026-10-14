@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { HiOutlineArrowDownLeft, HiOutlineArrowUpRight, HiOutlineArrowsRightLeft } from 'react-icons/hi2';
+import { HiOutlineArrowDownLeft, HiOutlineArrowUpRight, HiOutlineArrowsRightLeft, HiOutlineExclamationTriangle, HiOutlineXMark } from 'react-icons/hi2';
 import { useTransactions } from '../context/TransactionContext';
 import TransactionFilters from '../components/transactions/TransactionFilters';
 import TransactionList from '../components/transactions/TransactionList';
@@ -23,6 +23,8 @@ const SummaryCard = ({ label, amount, icon: Icon, tone, detail }) => (
 const Transactions = () => {
   const { transactions, setTransactions } = useTransactions();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [transactionToEdit, setTransactionToEdit] = useState(null);
+  const [transactionToDelete, setTransactionToDelete] = useState(null);
   const [filters, setFilters] = useState({
     search: '', type: 'all', category: '', paymentMethod: '', datePreset: 'all', startDate: '', endDate: '',
   });
@@ -49,6 +51,21 @@ const Transactions = () => {
   const addTransaction = (transaction) => {
     setTransactions((previous) => [transaction, ...previous]);
     setIsAddModalOpen(false);
+  };
+
+  const saveTransaction = (transaction) => {
+    if (transactionToEdit) {
+      setTransactions((previous) => previous.map((item) => item.id === transaction.id ? transaction : item));
+      setTransactionToEdit(null);
+    } else {
+      addTransaction(transaction);
+    }
+  };
+
+  const deleteTransaction = () => {
+    if (!transactionToDelete) return;
+    setTransactions((previous) => previous.filter((item) => item.id !== transactionToDelete.id));
+    setTransactionToDelete(null);
   };
 
   return (
@@ -93,9 +110,28 @@ const Transactions = () => {
             {filteredTransactions.length} {filteredTransactions.length === 1 ? 'result' : 'results'}
           </span>
         </div>
-        <TransactionList transactions={filteredTransactions} />
+        <TransactionList transactions={filteredTransactions} onEdit={setTransactionToEdit} onDelete={setTransactionToDelete} />
       </section>
-      {isAddModalOpen && <AddTransactionModal onClose={() => setIsAddModalOpen(false)} onSubmit={addTransaction} />}
+      {(isAddModalOpen || transactionToEdit) && <AddTransactionModal transaction={transactionToEdit} onClose={() => { setIsAddModalOpen(false); setTransactionToEdit(null); }} onSubmit={saveTransaction} />}
+      {transactionToDelete && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-[2px]" onMouseDown={(event) => { if (event.target === event.currentTarget) setTransactionToDelete(null); }}>
+          <section role="alertdialog" aria-modal="true" aria-labelledby="delete-transaction-title" aria-describedby="delete-transaction-description" style={{ padding: '32px' }} className="w-full max-w-lg rounded-3xl border border-slate-200/80 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.18)]">
+            <div className="flex items-start justify-between gap-5">
+              <span className="grid h-14 w-14 place-items-center rounded-2xl bg-rose-50 text-rose-600"><HiOutlineExclamationTriangle className="h-7 w-7" /></span>
+              <button type="button" onClick={() => setTransactionToDelete(null)} aria-label="Close confirmation" className="grid h-10 w-10 place-items-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-200"><HiOutlineXMark className="h-5 w-5" /></button>
+            </div>
+            <div className="mt-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-rose-600">Delete transaction</p>
+              <h2 id="delete-transaction-title" className="mt-2 text-2xl font-bold tracking-tight text-slate-900">Are you sure?</h2>
+              <p id="delete-transaction-description" className="mt-3 text-sm leading-6 text-slate-500">You’re about to delete <span className="font-semibold text-slate-700">{transactionToDelete.title}</span>. This action can’t be undone.</p>
+            </div>
+            <div className="mt-8 flex flex-col-reverse gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:justify-end">
+              <button type="button" onClick={() => setTransactionToDelete(null)} className="h-12 rounded-xl border border-slate-200 bg-white px-6 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200">Keep transaction</button>
+              <button type="button" onClick={deleteTransaction} className="h-12 rounded-xl bg-rose-600 px-6 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-700 focus:outline-none focus:ring-4 focus:ring-rose-500/20">Delete transaction</button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 };

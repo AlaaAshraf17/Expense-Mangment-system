@@ -9,8 +9,16 @@ const localDate = () => {
 
 const emptyForm = () => ({ type: 'expense', title: '', amount: '', category: '', paymentMethod: '', date: localDate() });
 
-const AddTransactionModal = ({ onClose, onSubmit }) => {
-  const [form, setForm] = useState(emptyForm);
+const AddTransactionModal = ({ onClose, onSubmit, transaction = null }) => {
+  const isEditing = Boolean(transaction);
+  const [form, setForm] = useState(() => transaction ? {
+    type: transaction.type,
+    title: transaction.title,
+    amount: String(transaction.amount),
+    category: transaction.category,
+    paymentMethod: transaction.paymentMethod,
+    date: transaction.date,
+  } : emptyForm());
   const [error, setError] = useState('');
   const titleRef = useRef(null);
 
@@ -31,7 +39,7 @@ const AddTransactionModal = ({ onClose, onSubmit }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!form.type || !form.title.trim() || !form.amount || !form.category || !form.paymentMethod || !form.date) {
-      setError('Complete all fields to add this transaction.');
+      setError('Complete all fields before saving this transaction.');
       return;
     }
     const amount = Number(form.amount);
@@ -40,7 +48,7 @@ const AddTransactionModal = ({ onClose, onSubmit }) => {
       return;
     }
     onSubmit({
-      id: globalThis.crypto?.randomUUID?.() ?? `txn-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      ...(isEditing ? { id: transaction.id } : { id: globalThis.crypto?.randomUUID?.() ?? `txn-${Date.now()}-${Math.random().toString(36).slice(2)}` }),
       type: form.type,
       title: form.title.trim(),
       amount,
@@ -61,7 +69,7 @@ const AddTransactionModal = ({ onClose, onSubmit }) => {
         <div style={{ padding: '20px 28px' }} className="flex items-center justify-between border-b border-slate-100">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-indigo-600">Your finances</p>
-            <h2 id="add-transaction-title" className="text-2xl font-bold tracking-tight text-slate-900">Add Transaction</h2>
+        <h2 id="add-transaction-title" className="text-2xl font-bold tracking-tight text-slate-900">{isEditing ? 'Edit Transaction' : 'Add Transaction'}</h2>
           </div>
           <button type="button" onClick={onClose} aria-label="Close dialog" className="grid h-10 w-10 place-items-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 focus:outline-none focus:ring-4 focus:ring-indigo-500/15"><HiOutlineX className="h-5 w-5" /></button>
         </div>
@@ -103,7 +111,7 @@ const AddTransactionModal = ({ onClose, onSubmit }) => {
           {error && <p role="alert" style={{ padding: '12px 16px' }} className="rounded-xl border border-rose-200 bg-rose-50 text-sm font-medium text-rose-700">{error}</p>}
           <div style={{ paddingTop: 20 }} className="flex flex-col-reverse gap-3 border-t border-slate-100 sm:flex-row sm:justify-end">
             <button type="button" onClick={onClose} style={{ padding: '0 24px' }} className="h-12 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200">Cancel</button>
-            <button type="submit" style={{ padding: '0 24px' }} className="h-12 rounded-xl bg-indigo-600 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/20">Add Transaction</button>
+            <button type="submit" style={{ padding: '0 24px' }} className="h-12 rounded-xl bg-indigo-600 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/20">{isEditing ? 'Save Changes' : 'Add Transaction'}</button>
           </div>
         </form>
       </section>
