@@ -1,14 +1,12 @@
 import { HiOutlineArrowDownLeft, HiOutlineArrowUpRight, HiOutlineReceiptPercent } from 'react-icons/hi2';
-
-const formatCurrency = (value) => new Intl.NumberFormat('en-US', {
-  style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2,
-}).format(value);
+import { useCurrencyFormatter } from '../../utils/currency';
 
 const formatDate = (dateStr) => new Date(`${dateStr}T12:00:00`).toLocaleDateString('en-US', {
   month: 'short', day: 'numeric', year: 'numeric',
 });
 
 const TransactionList = ({ transactions, onEdit, onDelete }) => {
+  const formatCurrency = useCurrencyFormatter();
   if (transactions.length === 0) {
     return (
       <div className="flex min-h-64 flex-col items-center justify-center px-6 py-14 text-center">

@@ -5,17 +5,8 @@ import {
   Cell,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from 'recharts';
-
-// ── Currency formatter ─────────────────────────────────────────────────────
-const formatCurrency = (value) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
+import { useCurrencyFormatter } from '../../utils/currency';
 
 // ── Category colors map ────────────────────────────────────────────────────
 // These match the colors from mockData.js
@@ -35,7 +26,7 @@ const categoryColors = {
 };
 
 // ── Custom tooltip ─────────────────────────────────────────────────────────
-const CustomTooltip = ({ active, payload }) => {
+const CustomTooltip = ({ active, payload, formatCurrency }) => {
   if (!active || !payload || payload.length === 0) return null;
 
   const data = payload[0].payload;
@@ -78,6 +69,7 @@ const CustomLegend = ({ payload }) => {
 
 // ── Main component ─────────────────────────────────────────────────────────
 const SpendingByCategory = ({ transactions }) => {
+  const formatCurrency = useCurrencyFormatter({ minimumFractionDigits: 0, maximumFractionDigits: 0 });
   // ── Transform filtered transactions into chart data ──────────────────────
   const chartData = useMemo(() => {
     // Filter only expense transactions
@@ -163,7 +155,7 @@ const SpendingByCategory = ({ transactions }) => {
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip formatCurrency={formatCurrency} />} />
             </PieChart>
           </ResponsiveContainer>
         </div>

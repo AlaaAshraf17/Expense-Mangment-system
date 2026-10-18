@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { useCurrencyFormatter } from '../../utils/currency';
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -16,16 +17,8 @@ const formatDate = (dateStr) => {
   return `${month} ${day}`;
 };
 
-const formatCurrency = (value) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
-
 // ── Custom tooltip ─────────────────────────────────────────────────────────
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, formatCurrency }) => {
   if (!active || !payload || payload.length === 0) return null;
 
   return (
@@ -40,6 +33,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 // ── Main component ─────────────────────────────────────────────────────────
 const ExpensesOverTime = ({ transactions }) => {
+  const formatCurrency = useCurrencyFormatter({ minimumFractionDigits: 0, maximumFractionDigits: 0 });
   // ── Transform filtered transactions into chart data ──────────────────────
   // Group expense transactions by date and sum amounts for each date
   const chartData = useMemo(() => {
@@ -135,7 +129,7 @@ const ExpensesOverTime = ({ transactions }) => {
               axisLine={false}
             />
 
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip formatCurrency={formatCurrency} />} />
 
             <Area
               type="monotone"

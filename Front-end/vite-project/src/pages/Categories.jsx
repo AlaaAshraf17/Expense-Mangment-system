@@ -1,16 +1,11 @@
 import { useMemo } from 'react';
 import { categories } from '../data/mockData';
 import { useTransactions } from '../context/TransactionContext';
-
-const currency = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
+import { useCurrencyFormatter } from '../utils/currency';
 
 const Categories = () => {
   const { transactions } = useTransactions();
+  const formatCurrency = useCurrencyFormatter();
 
   const expenseCategories = useMemo(() => {
     const totalsByCategory = transactions
@@ -51,7 +46,7 @@ const Categories = () => {
             <p className="mt-1 text-sm text-slate-500">Totals are based on your expense transactions.</p>
           </div>
           <p className="text-sm text-slate-500">
-            Total spent <span className="font-semibold text-slate-900">{currency.format(totalSpent)}</span>
+            Total spent <span className="font-semibold text-slate-900">{formatCurrency(totalSpent)}</span>
           </p>
         </div>
 
@@ -73,7 +68,7 @@ const Categories = () => {
 
               <div className="mt-6 border-t border-slate-100 pt-5">
                 <p className="text-xs font-medium text-slate-500">Total spent</p>
-                <p className="mt-1 text-2xl font-bold tracking-tight text-slate-900">{currency.format(category.total)}</p>
+                <p className="mt-1 text-2xl font-bold tracking-tight text-slate-900">{formatCurrency(category.total)}</p>
               </div>
             </article>
           ))}

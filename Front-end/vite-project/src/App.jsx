@@ -1,11 +1,14 @@
 import AppRoutes from './routes/AppRoutes'
 import { TransactionProvider } from './context/TransactionContext'
+import { SettingsProvider } from './context/SettingsContext'
 function App() {
 
   return (
     <>
      <TransactionProvider>
-       <AppRoutes />
+       <SettingsProvider>
+         <AppRoutes />
+       </SettingsProvider>
      </TransactionProvider>
     </>
   )

@@ -9,6 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { useCurrencyFormatter } from '../../utils/currency';
 
 // ── Date formatter for x-axis display ─────────────────────────────────────
 const formatDate = (dateStr) => {
@@ -19,16 +20,8 @@ const formatDate = (dateStr) => {
 };
 
 // ── Currency formatter ─────────────────────────────────────────────────────
-const formatCurrency = (value) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value);
-
 // ── Custom tooltip ─────────────────────────────────────────────────────────
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, formatCurrency }) => {
   if (!active || !payload || payload.length === 0) return null;
 
   return (
@@ -54,6 +47,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 // ── Main component ─────────────────────────────────────────────────────────
 const IncomeVsExpenses = ({ transactions }) => {
+  const formatCurrency = useCurrencyFormatter({ minimumFractionDigits: 0, maximumFractionDigits: 0 });
   // ── Transform filtered transactions into chart data ──────────────────────
   const chartData = useMemo(() => {
     // If no transactions, return empty array
@@ -143,7 +137,7 @@ const IncomeVsExpenses = ({ transactions }) => {
               axisLine={false}
             />
 
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip formatCurrency={formatCurrency} />} />
 
             <Legend
               wrapperStyle={{ fontSize: '13px', paddingTop: '20px' }}

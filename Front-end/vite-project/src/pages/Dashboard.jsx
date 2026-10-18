@@ -6,20 +6,13 @@ import {
   HiOutlineCalculator,
 } from 'react-icons/hi';
 import SummaryCard from '../components/dashboard/SummaryCard';
-import DashboardFilters, { getPresetRange } from '../components/dashboard/DashboardFilters';
+import DashboardFilters from '../components/dashboard/DashboardFilters';
 import ExpensesOverTime from '../components/dashboard/ExpensesOverTime';
 import SpendingByCategory from '../components/dashboard/SpendingByCategory';
 import IncomeVsExpenses from '../components/dashboard/IncomeVsExpenses';
 import RecentTransactions from '../components/dashboard/RecentTransactions';
 import { useTransactions } from '../context/TransactionContext';
-
-// ── Currency formatter ─────────────────────────────────────────────────────
-const fmt = (n) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format(n);
+import { useCurrencyFormatter } from '../utils/currency';
 
 // ── Local date formatter — avoids timezone shifts from toISOString() ──────
 const localDateStr = (date) => {
@@ -46,6 +39,7 @@ const buildDefaultFilters = () => {
 // ── Dashboard ──────────────────────────────────────────────────────────────
 const Dashboard = () => {
   const { transactions } = useTransactions();
+  const formatCurrency = useCurrencyFormatter();
   const [filters, setFilters] = useState(buildDefaultFilters);
 
   // ── Derive filtered transactions from the selected filters ──────────────
@@ -122,28 +116,28 @@ const Dashboard = () => {
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4" style={{ marginTop: '2rem' }}>
         <SummaryCard
           title="Total Balance"
-          value={fmt(metrics.totalBalance)}
+          value={formatCurrency(metrics.totalBalance)}
           icon={HiOutlineCash}
           color="indigo"
           subtitle="Net position"
         />
         <SummaryCard
           title="Total Income"
-          value={fmt(metrics.totalIncome)}
+          value={formatCurrency(metrics.totalIncome)}
           icon={HiOutlineTrendingUp}
           color="emerald"
           subtitle="All income sources"
         />
         <SummaryCard
           title="Total Expenses"
-          value={fmt(metrics.totalExpenses)}
+          value={formatCurrency(metrics.totalExpenses)}
           icon={HiOutlineTrendingDown}
           color="rose"
           subtitle="All spending"
         />
         <SummaryCard
           title="Monthly Avg Spend"
-          value={fmt(metrics.monthlyAvg)}
+          value={formatCurrency(metrics.monthlyAvg)}
           icon={HiOutlineCalculator}
           color="amber"
           subtitle={`Based on ${

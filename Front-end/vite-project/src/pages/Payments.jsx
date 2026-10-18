@@ -2,16 +2,11 @@ import { useMemo } from 'react';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { paymentMethods } from '../data/mockData';
 import { useTransactions } from '../context/TransactionContext';
-
-const currency = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
+import { useCurrencyFormatter } from '../utils/currency';
 
 const Payments = () => {
   const { transactions } = useTransactions();
+  const formatCurrency = useCurrencyFormatter();
 
   const methodsWithTotals = useMemo(() => paymentMethods.map((method) => {
     const totals = transactions.reduce((result, transaction) => {
@@ -54,8 +49,8 @@ const Payments = () => {
             <p className="mt-1 text-sm text-slate-500">Activity across each way you pay and receive money.</p>
           </div>
           <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
-            <p className="text-slate-500">Total expenses <span className="font-semibold text-slate-900">{currency.format(totals.expenses)}</span></p>
-            <p className="text-slate-500">Total income <span className="font-semibold text-slate-900">{currency.format(totals.income)}</span></p>
+            <p className="text-slate-500">Total expenses <span className="font-semibold text-slate-900">{formatCurrency(totals.expenses)}</span></p>
+            <p className="text-slate-500">Total income <span className="font-semibold text-slate-900">{formatCurrency(totals.income)}</span></p>
           </div>
         </div>
 
@@ -76,11 +71,11 @@ const Payments = () => {
               <div className="mt-6 grid grid-cols-2 gap-4 border-t border-slate-100 pt-5">
                 <div>
                   <p className="text-xs font-medium text-slate-500">Total expenses</p>
-                  <p className="mt-1 text-xl font-bold tracking-tight text-slate-900">{currency.format(method.expenses)}</p>
+                  <p className="mt-1 text-xl font-bold tracking-tight text-slate-900">{formatCurrency(method.expenses)}</p>
                 </div>
                 <div>
                   <p className="text-xs font-medium text-slate-500">Total income</p>
-                  <p className="mt-1 text-xl font-bold tracking-tight text-slate-900">{currency.format(method.income)}</p>
+                  <p className="mt-1 text-xl font-bold tracking-tight text-slate-900">{formatCurrency(method.income)}</p>
                 </div>
               </div>
             </article>
@@ -107,7 +102,7 @@ const Payments = () => {
           </div>
         ) : (
           <div className="grid min-w-0 items-center gap-6 lg:grid-cols-[minmax(280px,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
-            <div className="relative mx-auto h-[280px] w-full min-w-0 max-w-sm" role="img" aria-label={`Donut chart of ${currency.format(totals.expenses)} in expenses by payment method`}>
+            <div className="relative mx-auto h-[280px] w-full min-w-0 max-w-sm" role="img" aria-label={`Donut chart of ${formatCurrency(totals.expenses)} in expenses by payment method`}>
               <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
                   <Pie
@@ -125,14 +120,14 @@ const Payments = () => {
                     {expenseChartData.map((method) => <Cell key={method.id} fill={method.color} />)}
                   </Pie>
                   <Tooltip
-                    formatter={(value) => currency.format(Number(value))}
+                    formatter={(value) => formatCurrency(Number(value))}
                     contentStyle={{ borderRadius: 12, borderColor: '#e2e8f0', boxShadow: '0 8px 24px rgba(15,23,42,0.08)' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-xs font-medium text-slate-500">Total expenses</span>
-                <span className="mt-1 text-xl font-bold tracking-tight text-slate-900">{currency.format(totals.expenses)}</span>
+                <span className="mt-1 text-xl font-bold tracking-tight text-slate-900">{formatCurrency(totals.expenses)}</span>
               </div>
             </div>
 
@@ -141,7 +136,7 @@ const Payments = () => {
                 <li key={method.id} className="flex min-w-0 items-center gap-3 rounded-xl px-3 py-3">
                   <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: method.color }} aria-hidden="true" />
                   <span className="min-w-0 flex-1 truncate text-sm font-medium text-slate-700">{method.name}</span>
-                  <span className="shrink-0 text-right text-sm font-semibold text-slate-900">{currency.format(method.expenses)}</span>
+                  <span className="shrink-0 text-right text-sm font-semibold text-slate-900">{formatCurrency(method.expenses)}</span>
                   <span className="w-14 shrink-0 text-right text-xs text-slate-500">{method.percentage.toFixed(1)}%</span>
                 </li>
               ))}

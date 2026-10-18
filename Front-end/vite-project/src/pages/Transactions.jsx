@@ -4,21 +4,21 @@ import { useTransactions } from '../context/TransactionContext';
 import TransactionFilters from '../components/transactions/TransactionFilters';
 import TransactionList from '../components/transactions/TransactionList';
 import AddTransactionModal from '../components/transactions/AddTransactionModal';
+import { useCurrencyFormatter } from '../utils/currency';
 
-const currency = new Intl.NumberFormat('en-US', {
-  style: 'currency', currency: 'USD', maximumFractionDigits: 2,
-});
-
-const SummaryCard = ({ label, amount, icon: Icon, tone, detail }) => (
-  <article style={{ padding: '24px' }} className="relative flex min-h-40 flex-col rounded-2xl border border-slate-200/80 bg-white shadow-[0_2px_10px_rgba(15,23,42,0.03)] sm:p-7">
-    <div className="flex flex-1 flex-col gap-2 pr-12">
-        <p className="text-sm font-medium text-slate-500 ">{label}</p>
-        <p className="text-2xl font-bold tracking-tight text-slate-900">{currency.format(amount)}</p>
-    </div>
-    <span style={{ right: 24, top: 24 }} className={`absolute grid h-10 w-10 place-items-center rounded-xl ${tone}`}><Icon className="h-5 w-5" /></span>
-    <p className="mt-3 text-xs leading-5 text-slate-400">{detail}</p>
-  </article>
-);
+const SummaryCard = ({ label, amount, icon: Icon, tone, detail }) => {
+  const formatCurrency = useCurrencyFormatter();
+  return (
+    <article style={{ padding: '24px' }} className="relative flex min-h-40 flex-col rounded-2xl border border-slate-200/80 bg-white shadow-[0_2px_10px_rgba(15,23,42,0.03)] sm:p-7">
+      <div className="flex flex-1 flex-col gap-2 pr-12">
+          <p className="text-sm font-medium text-slate-500 ">{label}</p>
+          <p className="text-2xl font-bold tracking-tight text-slate-900">{formatCurrency(amount)}</p>
+      </div>
+      <span style={{ right: 24, top: 24 }} className={`absolute grid h-10 w-10 place-items-center rounded-xl ${tone}`}><Icon className="h-5 w-5" /></span>
+      <p className="mt-3 text-xs leading-5 text-slate-400">{detail}</p>
+    </article>
+  );
+};
 
 const Transactions = () => {
   const { transactions, setTransactions } = useTransactions();

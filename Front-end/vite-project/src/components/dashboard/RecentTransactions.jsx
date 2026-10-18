@@ -1,13 +1,5 @@
 import { useMemo } from 'react';
-
-// ── Currency formatter ─────────────────────────────────────────────────────
-const formatCurrency = (value) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
+import { useCurrencyFormatter } from '../../utils/currency';
 
 // ── Date formatter ─────────────────────────────────────────────────────────
 const formatDate = (dateStr) => {
@@ -21,6 +13,7 @@ const formatDate = (dateStr) => {
 
 // ── Main component ─────────────────────────────────────────────────────────
 const RecentTransactions = ({ transactions }) => {
+  const formatCurrency = useCurrencyFormatter();
   // ── Get latest 6 transactions sorted by date ──────────────────────────
   const recentTransactions = useMemo(() => {
     return [...transactions]
